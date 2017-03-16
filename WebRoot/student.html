@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Page title -->
+    <title> 师门管理系统</title>
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
+
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+	<link href="css/uploadfile.css" rel="stylesheet">
+
+    <!-- Script -->
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/constants.js"></script>
+	<script type="text/javascript" src="js/jquery.uploadfile.min.js"></script>
+
+    <script>
+    	$(document).ready(function() {
+    		$(".header").load("pub_nav.html");
+    	});
+    </script>
+</head>
+<body>
+  <div class="header"></div>
+  <div class="main-wrap">
+    <div class="crumb-wrap">
+      <div class="crumb-list">
+        <i class="icon-font"></i>
+        <a color="#white" href="index.html">首页</a>
+        <span class="crumb-step">&gt;</span>
+        <span class="crumb-name">师门管理</span>
+        <span class="crumb-step">&gt;</span>
+        <span class="crumb-name">学生管理</span>
+      </div>
+    </div>
+    
+    <div class="result-wrap">
+        <div class="result-title">
+       
+			<button class="btn btn-primary" onclick="window.location.href='add_student.html'">手动添加</button>
+			
+	
+		
+			<div class="uploadmsg import_msg"></div>
+          <!-- <button>批量导入</button> -->
+        </div>
+        <div class="result-content">
+          <table class="result-tab" width="100%">
+            <thead>
+             <tr>
+                <th>姓名</th>
+                <th>学级</th>
+                <th>学号</th>
+                <th>爱好</th>
+                <th>管理操作</th>
+              </tr>
+            </thead>
+            <tbody id="tbody_content">
+            </tbody>
+          </table>
+    		</div>
+        </div>
+    </div>
+  </div>
+  
+<div class="modal modal-contact" id="modal-contact" style="display:none; text-align:center; padding:10px; margin-top:200px;" >
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="modal_text">您已提交考卷，无法再进入</h3>
+    <button class="btn btn-success refresh" data-dismiss="modal" >确定</button>
+</div>
+  
+ <!-- 删除，确认弹窗 -->
+<div id="confirm_cancel"></div>
+<script type="text/javascript" src="js/pub_fuc.js"></script>
+ <script type="text/javascript">
+/* var department = "";//系部
+var year = "";//学年
+var classes = "";//班级
+var stuId = "";//学号 */
+
+var loadData = function(start){
+	// var param = {"start":start,"number":number};
+	 $.getJSON("api/student/get",function(data){
+		 var code = data.code;
+		 if(code=="0"){
+			//var page = Math.ceil(data.size/number);
+			//$("#showCurrnetPage").text(start+"/"+page);
+			//$(".pageButton").off();
+			//pagebutton(page,number);
+
+			 var arr = data.data;
+			 var html ='';
+			 //console.log(arr);
+			 $.each(arr,function(index){
+				 html += '<tr>'
+		               // +'<td>'+getPageIndex(start,number,index)+'</td>'
+		                +'<td>'+this.name+'</td>'
+		                +'<td>'+this.grand+'</td>'
+		                +'<td>'+this.xuehao+'</td>'
+		                +'<td>'+this.hobby+'</td>'
+		                +'<td>'
+			                +'<a class="btn btn-warning" href="edit_student.html?sub_id='+this.id+'&sub_name='+this.name+'&sub_grand='+this.grand+'&sub_xuehao='+this.xuehao+'&sub_hobby='+this.hobby+'">编辑</a>'
+		                	+'&nbsp;'
+		                	+'<button t_id="'+this.id+'" class="btn btn-danger del_but">删除</button>'
+		               	+'</td>'
+		               	+'</tr>';
+			 });
+			 
+			document.getElementById('tbody_content').innerHTML = html;
+           opera();
+		 }
+
+	 });
+}
+
+
+var opera = function(){
+	 $("#tbody_content").on("click","button",function(e){
+		 var ele = e.currentTarget;
+		 var t_id = ele.getAttribute("t_id");
+		 $("#confirm_cancel").load("public/confirm_cancel.html",function(data){
+				$('#myModal').modal('show');
+				$("#myModal button.comfirm").click(function(){
+					$('#myModal').modal('hide');
+					
+					$.getJSON("api/student/delete",{"id":t_id},function(data){
+						var code = data.code;
+						console.log(data);
+						if(code=="0"){
+							window.location.reload();
+						}
+					});
+				});
+				
+			});
+	 });
+}
+
+
+$(function(){
+	 loadData(1);
+});
+
+
+ </script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Page title -->
+    <title>师门管理系统</title>
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
+
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Script -->
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/pub_fuc.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+    <script>
+    	$(document).ready(function() {
+    		$(".header").load("pub_nav.html");
+    	});
+    </script>
+</head>
+<body>
+  <div class="header"></div>
+  <div class="main-wrap">
+    <div class="crumb-wrap">
+      <div class="crumb-list">
+        <i class="icon-font"></i>
+        <a color="#white" href="index.html">首页</a>
+        <span class="crumb-step">&gt;</span>
+        <span class="crumb-name">师门管理</span>
+        <span class="crumb-step">&gt;</span>
+        <span class="crumb-name">学生管理</span>
+        <span class="crumb-step">&gt;</span>
+        <span class="crumb-name">添加学生</span>
+      </div>
+    </div>
+    <div class="result-wrap">
+      <form style="padding-left:100px;" id="add_stu">
+        </br>
+        </br>
+				<h3>姓名</h3>
+        </br>
+				<input type="text"  placeholder="请输入学生姓名" id="name">
+			<!-- 	<input type="hidden"  name="stuId"> -->
+        </br>
+        </br>
+				<h3>学级</h3>
+        </br>
+				<input type="text" placeholder="请输入学生学级 " id="grand">
+        </br>
+        </br>
+				<h3>学号</h3>
+        </br>
+				<input type="text" placeholder="请输入学生学号" id="xuehao">
+        </br>
+                </br>
+				<h3>爱好</h3>
+        </br>
+				<input type="text" placeholder="请输入学生爱好" id="hobby">
+        </br>
+      
+       </br>
+
+
+        <input type="submit" class="btn btn-default" onclick="history.go(-1)" value="返回">
+				<input id="submitButton" type="submit" class="btn btn-success" value="提交" style="margin-left:50px;">
+  		</form>
+			</div>
+    </div>
+ <script type="text/javascript" src="js/pub_fuc.js"></script> 
+<script type="text/javascript">
+
+var sub_grand = getParameterByName("sub_grand");
+var sub_name = getParameterByName("sub_name");
+var sub_xuehao = getParameterByName("sub_xuehao");
+var sub_hobby = getParameterByName("sub_hobby");
+var sub_id = getParameterByName("sub_id");
+
+document.getElementById("name").value = sub_name;
+document.getElementById("grand").value = sub_grand;
+document.getElementById("xuehao").value = sub_xuehao;
+document.getElementById("hobby").value = sub_hobby;
+
+$("#submitButton").click(function(){
+	var sname = document.getElementById("name").value;
+	var sgrand=document.getElementById("grand").value;
+	var sxuehao = document.getElementById("xuehao").value ;
+	var shobby = document.getElementById("hobby").value;
+	//var param = $("#add_stu").serializeArray();
+	$.post("api/student/update",{id:sub_id,name:sname,grand:sgrand,xuehao:sxuehao,hobby:shobby},function(data){
+		data = $.parseJSON(data);
+		var code = data.code;
+		if(code=='0'){
+			window.location.href = 'student.html';
+		}
+	});
+	return false;
+});
+
+
+
+</script>  
+  
+</body>
+</html>
